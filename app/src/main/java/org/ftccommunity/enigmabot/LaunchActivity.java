@@ -16,17 +16,43 @@
 
 package org.ftccommunity.enigmabot;
 
+import android.content.ComponentName;
+import android.content.Intent;
+import android.content.ServiceConnection;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.WindowManager;
+import android.widget.TextView;
+
+import com.google.common.net.InetAddresses;
 
 import org.ftccommunity.enigmabot.util.Dimmer;
+import org.ftccommunity.robotcore.RobotService;
+
+import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.net.SocketException;
+import java.util.Collections;
 
 public class LaunchActivity extends AppCompatActivity {
+    protected ServiceConnection connection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            RobotService.Messaging binder = (RobotService.Messaging) service;
+            onServiceBind(binder.getService());
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+            //controllerService = null;
+        }
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,22 +62,36 @@ public class LaunchActivity extends AppCompatActivity {
 
         View main = getWindow().getDecorView();
         main.setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
-        WindowManager.LayoutParams windowParams = getWindow().getAttributes();
-        //windowParams.screenBrightness = 0f;
         Dimmer dimmer = new Dimmer(getWindow(), 5000, 50);
-//        main.setOnTouchListener(new View.OnTouchListener() {
-//            @Override
-//            public boolean onTouch(final View v, MotionEvent event) {
-//                v.postDelayed(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        v.setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
-//                    }
-//                }, 1000);
-//
-//                return false;
-//            }
-//        });
+
+        // temp
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                NetworkInterface wlan0;
+                try {
+                    wlan0 = NetworkInterface.getByName("wlan0");
+                    final InetAddress address = Collections.list(wlan0.getInetAddresses()).get(1);
+                    final TextView viewById = (TextView) findViewById(R.id.IpAddressValue);
+                    viewById.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            viewById.setText(InetAddresses.toAddrString(address));
+                        }
+                    });
+                } catch (SocketException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        Intent intent = new Intent(this, RobotService.class);
+        bindService(intent, connection, BIND_AUTO_CREATE);
     }
 
     @Override
@@ -59,6 +99,12 @@ public class LaunchActivity extends AppCompatActivity {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_launch, menu);
         return true;
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        unbindService(connection);
     }
 
     @Override
@@ -74,5 +120,15 @@ public class LaunchActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void onServiceBind(RobotService service) {
+        Log.i("MAIN:", "Bound to Ftc Controller Service");
+//        controllerService = service;
+//        updateUI.setControllerService(controllerService);
+//
+//        callback.wifiDirectUpdate(controllerService.getWifiDirectStatus());
+//        callback.robotUpdate(controllerService.getRobotStatus());
+//        requestRobotSetup();
     }
 }

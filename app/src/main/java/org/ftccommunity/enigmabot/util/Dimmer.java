@@ -46,10 +46,11 @@ public class Dimmer implements Runnable, View.OnTouchListener {
 
         // Setup
         executingThread = new Thread(this);
+        ;
+        executingThread.start();
         executingThread.setName("Dimmer");
         window.getDecorView().setOnTouchListener(this);
         window.getDecorView().setKeepScreenOn(true);
-        executingThread.start();
     }
 
     /**
@@ -102,7 +103,7 @@ public class Dimmer implements Runnable, View.OnTouchListener {
                 window.getDecorView().post(new Runnable() {
                     @Override
                     public void run() {
-                        Log.d(TAG, "Setting dimmer to " + layoutParams.screenBrightness);
+                        //Log.d(TAG, "Setting dimmer to " + layoutParams.screenBrightness);
                         window.setAttributes(layoutParams);
                     }
                 });

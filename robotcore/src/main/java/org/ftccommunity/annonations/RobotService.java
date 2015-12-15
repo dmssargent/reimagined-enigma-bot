@@ -14,4 +14,14 @@
  * limitations under the License.
  */
 
-include ':app', ':robotcore'
+package org.ftccommunity.annonations;
+
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+
+/**
+ * Created by David on 12/14/2015.
+ */
+@Retention(RetentionPolicy.RUNTIME)
+public @interface RobotService {
+}
