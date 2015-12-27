@@ -1,0 +1,116 @@
+syntax = "proto3";
+
+option java_package = "org.ftccommunity.messages";
+option java_outer_classname = "Robocol";
+
+message RobotMessage {
+    uint32 version = 1;
+
+    oneof Message {
+        Gamepad gamepad = 2;
+		HardwareMessage hwMessage = 3;
+		Telemetry telemetry = 4;
+		RobotAction robotAction = 5;
+		
+		Heartbeat ping = 16;
+		LogRequest logReqest = 17;
+    }
+}
+
+message Gamepad {
+    uint32 id = 1;
+	repeated Joystick joysticks = 2;
+	Dpad dpad = 3;
+	bool a = 4;
+	bool b = 5;
+	bool x = 6;
+	bool y = 7;
+	bool leftTrigger = 8;
+	bool rightTigger = 9;
+	
+	uint64 timestamp = 16;
+	bool guide = 17;
+	bool back = 18;
+
+    message Joystick {
+        double left = 1;
+        double right = 2;
+        bool press = 3;
+    }
+	
+	message Dpad {
+		bool up = 1;
+		bool down = 2;
+		bool left = 3;
+		bool right = 4;
+	}
+}
+
+message Heartbeat {
+	uint64 timeSent = 1;
+	string inetAddress = 2;
+}
+
+message HardwareMessage {
+    uint32 id = 1;
+    string serial = 2;
+    uint32 port = 3;
+    bytes address = 4;
+    bytes command = 5;
+}
+
+message Telemetry {
+	string key = 1;
+	repeated string message = 2;
+}
+
+message LogRequest {
+	Levels level = 2;
+	uint32 id = 1;
+	string data = 3;
+	
+	enum Levels {
+		INFO = 0;
+		WARNING = 1;
+		ERROR = 2;
+		ASSERT = 3;
+		DEBUG = 4 ;
+	}
+}
+
+message RobotAction {
+	uint32 version = 1;
+	
+	oneof RobotActions {
+		StopRobot stop = 2;
+		ChangeOpMode change = 3;
+		RequestLevelChange request = 4;
+		RobotFailure failure = 5;
+	}
+	
+	message StopRobot {
+		string opMode = 2;
+	}
+	
+	message ChangeOpMode {
+		string newOpMode = 1;
+		bool afterReturn = 2;
+	}
+	
+	message RequestLevelChange {
+		bool isResponse = 1;
+		Levels level = 2;
+		
+		enum Levels {
+			INIT = 0;
+			START = 1;
+			STOP = 2;
+		}
+	}
+	
+	message RobotFailure {
+		string opMode = 1;
+		string message = 2;
+		string logcat = 3;
+	}
+}

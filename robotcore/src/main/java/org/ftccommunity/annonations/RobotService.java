@@ -24,4 +24,5 @@ import java.lang.annotation.RetentionPolicy;
  */
 @Retention(RetentionPolicy.RUNTIME)
 public @interface RobotService {
+    String value() default "";
 }

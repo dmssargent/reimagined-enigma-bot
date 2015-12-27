@@ -1,3 +1,5 @@
+import static org.gradle.api.JavaVersion.VERSION_1_7
+
 /*
  * Copyright 2015 David Sargent
  *
@@ -15,16 +17,17 @@
  */
 
 apply plugin: 'com.android.library'
+apply plugin: 'com.google.protobuf'
 
 android {
-    compileSdkVersion 23
-    buildToolsVersion "23.0.1"
+    compileSdkVersion configCompileSdkVersion
+    buildToolsVersion '23.0.2'
 
     defaultConfig {
         minSdkVersion 19
-        targetSdkVersion 23
+        targetSdkVersion configTargetSdkVersion
         versionCode 1
-        versionName "1.0"
+        versionName project.version
     }
     buildTypes {
         release {
@@ -33,22 +36,49 @@ android {
         }
     }
     dexOptions {
-        incremental false
+        incremental true
     }
+
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_7
-        targetCompatibility JavaVersion.VERSION_1_7
+        sourceCompatibility VERSION_1_7
+        targetCompatibility VERSION_1_7
+    }
+
+    sourceSets {
+        main {
+            proto {
+                srcDir 'src/main/proto'
+            }
+
+            java {
+                srcDir 'src/main/java'
+                srcDir 'src/release/javanano'
+            }
+        }
     }
 }
 
+protobuf {
+    // Configure the protoc executable
+    protoc {
+        // Download from repositories
+        artifact = 'com.google.protobuf:protoc:3.0.0-alpha-3'
+    }
+
+    generatedFilesBaseDir = "$projectDir/src/"
+}
+
 dependencies {
-    compile fileTree(include: ['*.jar'], dir: 'libs')
     testCompile 'junit:junit:4.12'
     compile 'com.android.support:appcompat-v7:23.1.1'
-    compile 'org.jetbrains:annotations:13.0'
-    compile 'com.google.guava:guava:19.0'
-    compile 'com.google.code.gson:gson:2.5'
-    compile 'io.netty:netty-all:4.1.0.Beta7'
-    compile 'com.jakewharton:butterknife:7.0.1'
-    compile 'com.google.dagger:dagger:2.0.2'
+    //
+    compile libraries.annotations
+    //
+    compile libraries.guava
+    //
+    compile libraries.gson
+    //
+    compile libraries.netty
+    compile project(':simpledagger2')
+    compile 'com.google.protobuf.nano:protobuf-javanano:3.0.0-alpha-4'
 }

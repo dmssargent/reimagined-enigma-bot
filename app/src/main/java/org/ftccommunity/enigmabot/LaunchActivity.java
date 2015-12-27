@@ -27,6 +27,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.google.common.net.InetAddresses;
@@ -44,7 +45,7 @@ public class LaunchActivity extends AppCompatActivity {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
             RobotService.Messaging binder = (RobotService.Messaging) service;
-            onServiceBind(binder.getService());
+            onServiceBind(binder.getService(), binder);
         }
 
         @Override
@@ -52,6 +53,8 @@ public class LaunchActivity extends AppCompatActivity {
             //controllerService = null;
         }
     };
+    private Dimmer dimmer;
+    private InetAddress currentAddress;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,7 +65,7 @@ public class LaunchActivity extends AppCompatActivity {
 
         View main = getWindow().getDecorView();
         main.setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
-        Dimmer dimmer = new Dimmer(getWindow(), 5000, 50);
+        dimmer = new Dimmer(getWindow(), 5000, 50);
 
         // temp
         new Thread(new Runnable() {
@@ -71,14 +74,14 @@ public class LaunchActivity extends AppCompatActivity {
                 NetworkInterface wlan0;
                 try {
                     wlan0 = NetworkInterface.getByName("wlan0");
-                    final InetAddress address = Collections.list(wlan0.getInetAddresses()).get(1);
-                    final TextView viewById = (TextView) findViewById(R.id.IpAddressValue);
-                    viewById.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            viewById.setText(InetAddresses.toAddrString(address));
-                        }
-                    });
+                    currentAddress = Collections.list(wlan0.getInetAddresses()).get(1);
+                    final String ipAddress = InetAddresses.toAddrString(currentAddress);
+                    Log.i("MAIN:", "IP Address: " + ipAddress);
+
+                    // Objects must be held by a synchronized block before calling notify
+                    synchronized (LaunchActivity.this) {
+                        LaunchActivity.this.notifyAll();
+                    }
                 } catch (SocketException e) {
                     e.printStackTrace();
                 }
@@ -89,6 +92,18 @@ public class LaunchActivity extends AppCompatActivity {
     @Override
     public void onStart() {
         super.onStart();
+        final TextView ipAddressLabel = (TextView) findViewById(R.id.IpAddressValue);
+
+        while (currentAddress == null) {
+            try {
+                synchronized (this) {
+                    this.wait();
+                }
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+        }
+        ipAddressLabel.setText(InetAddresses.toAddrString(currentAddress));
 
         Intent intent = new Intent(this, RobotService.class);
         bindService(intent, connection, BIND_AUTO_CREATE);
@@ -107,6 +122,7 @@ public class LaunchActivity extends AppCompatActivity {
         unbindService(connection);
     }
 
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
@@ -116,19 +132,25 @@ public class LaunchActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            return true;
+            startActivity(new Intent(this, SettingsActivity.class));
+        } else if (id == R.id.action_view_logs) {
+            startActivity(new Intent(this, ViewLogsActivity.class));
         }
 
         return super.onOptionsItemSelected(item);
     }
 
-    private void onServiceBind(RobotService service) {
-        Log.i("MAIN:", "Bound to Ftc Controller Service");
-//        controllerService = service;
-//        updateUI.setControllerService(controllerService);
-//
-//        callback.wifiDirectUpdate(controllerService.getWifiDirectStatus());
-//        callback.robotUpdate(controllerService.getRobotStatus());
-//        requestRobotSetup();
+    private void onServiceBind(RobotService service, RobotService.Messaging binder) {
+        Log.i("MAIN:", "Bound to Robot Controller Service");
+        binder.setContext(this);
+        service.startServices();
+        service.configureViews(
+                (TextView) findViewById(R.id.status),
+                (TextView) findViewById(R.id.status_desc),
+                (TextView) findViewById(R.id.gamepad1),
+                (TextView) findViewById(R.id.gamePad2),
+                (RelativeLayout) findViewById(R.id.robot_container)
+        );
+
     }
 }

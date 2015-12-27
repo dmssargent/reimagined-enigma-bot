@@ -34,8 +34,9 @@ import dalvik.system.DexFile;
  * Created by David on 12/14/2015.
  */
 public class ClassManager {
-    private static final List<Class<?>> classes =
+    private transient static final List<Class<?>> classes =
             Collections.synchronizedList(new ArrayList<Class<?>>());
+    private transient static ClassManager instance;
     private final String TAG = "CLASSMGR:";
     private final List<Callback> callbacks;
     private final HashMultimap<Callback, Class<?>> callbackMap;
@@ -57,8 +58,13 @@ public class ClassManager {
     }
 
     public static ClassManager create(final Context ctx) {
+        // Are we already finished?
+        if (instance != null) {
+            return instance;
+        }
         ClassManager classManager = new ClassManager(ctx);
         classManager.computeList();
+        instance = classManager;
         return classManager;
     }
 
@@ -93,7 +99,7 @@ public class ClassManager {
         }
 
         // Add the classes found to the main class
-        this.classes.addAll(classesToProcess);
+        ClassManager.classes.addAll(classesToProcess);
     }
 
     public interface Callback<A> {

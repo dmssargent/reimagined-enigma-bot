@@ -5,6 +5,7 @@
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/reimagined-enigma-bot.iml" filepath="$PROJECT_DIR$/reimagined-enigma-bot.iml" />
       <module fileurl="file://$PROJECT_DIR$/robotcore/robotcore.iml" filepath="$PROJECT_DIR$/robotcore/robotcore.iml" />
+      <module fileurl="file://$PROJECT_DIR$/simpledagger2/simpledagger2.iml" filepath="$PROJECT_DIR$/simpledagger2/simpledagger2.iml" />
     </modules>
   </component>
 </project>

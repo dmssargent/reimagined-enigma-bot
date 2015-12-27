@@ -16,12 +16,22 @@
 
 package org.ftccommunity.services;
 
+import android.app.Activity;
+import android.app.Fragment;
+import android.app.FragmentManager;
+import android.content.Context;
+
 import com.google.common.util.concurrent.AbstractExecutionThreadService;
 
+import org.ftccommunity.annonations.Inject;
+import org.ftccommunity.annonations.Named;
 import org.ftccommunity.annonations.RobotService;
+import org.ftccommunity.gui.AuthDialog;
 
-import java.net.InetAddress;
+import java.net.InetSocketAddress;
 import java.util.Date;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
@@ -45,9 +55,6 @@ import io.netty.handler.ssl.SslContext;
 import io.netty.handler.ssl.SslContextBuilder;
 import io.netty.handler.ssl.util.SelfSignedCertificate;
 
-/**
- * Created by David on 12/14/2015.
- */
 @RobotService
 public class DevConsole extends AbstractExecutionThreadService {
     private static final boolean SSL = System.getProperty("ssl") != null;
@@ -57,8 +64,15 @@ public class DevConsole extends AbstractExecutionThreadService {
     private EventLoopGroup workerGroup = new NioEventLoopGroup();
     private ServerBootstrap serverBootstrap = new ServerBootstrap();
     private Thread mainThread;
+    private Context context;
 
-    public DevConsole() {
+    @Inject
+    @Named("DeviceName")
+    private String wifiDeviceName = "";
+
+    @Inject
+    public DevConsole(Context ctx) {
+        this.context = ctx;
     }
 
     /**
@@ -124,7 +138,6 @@ public class DevConsole extends AbstractExecutionThreadService {
      * Creates a newly configured {@link ChannelPipeline} for a new channel.
      */
     private class TelnetServerInitializer extends ChannelInitializer<SocketChannel> {
-
         private final StringDecoder DECODER = new StringDecoder();
         private final StringEncoder ENCODER = new StringEncoder();
 
@@ -161,13 +174,30 @@ public class DevConsole extends AbstractExecutionThreadService {
      */
     @ChannelHandler.Sharable
     public class TelnetServerHandler extends SimpleChannelInboundHandler<String> {
-
+        private final String endl = "\r\n";
+        private AuthDialog dialog;
+        private boolean verified;
+        private Pattern pattern = Pattern.compile("[^\\w\\s{}\\\\/#<>;:!\"'\\.,]", Pattern.CASE_INSENSITIVE);
+        private String consoleQuery;
 
         @Override
         public void channelActive(ChannelHandlerContext ctx) throws Exception {
             // Send greeting for a new connection.
-            ctx.write("Welcome to " + InetAddress.getLocalHost().getHostName() + "!\r\n");
+            FragmentManager manager = ((Activity) context).getFragmentManager();
+            Fragment frag = manager.findFragmentByTag("fragment_auth");
+            if (frag != null) {
+                manager.beginTransaction().remove(frag).commit();
+            }
+            dialog = new AuthDialog();
+            dialog.show(manager, "fragment_auth");
+
+            consoleQuery = ((InetSocketAddress) ctx.channel().remoteAddress()).getAddress().getHostName()
+                    + '@' + wifiDeviceName + "> ";
+
+            ctx.write("Welcome to " + wifiDeviceName + "!\r\n");
             ctx.write("It is " + new Date() + " now.\r\n");
+            ctx.write("Please enter the code shown on the screen: ");
+            verified = false;
             ctx.flush();
         }
 
@@ -175,15 +205,36 @@ public class DevConsole extends AbstractExecutionThreadService {
         public void channelRead0(ChannelHandlerContext ctx, String request) throws Exception {
             // Generate and write a response.
             String response;
+            Matcher m = pattern.matcher(request);
+            try {
+                if (m.find()) {
+                    throw new IllegalStateException();
+                }
+            } catch (IllegalStateException ex) {
+                ctx.writeAndFlush("The command is invalid." + endl + consoleQuery);
+                return;
+            }
+
+            if (!verified) {
+                verified = dialog.correct(request);
+                ctx.writeAndFlush(verified ? "Correct! Have a pleasant day." + endl :
+                        "Nope, that is not it. Please try again. Passcode: ");
+                if (!verified) {
+                    return;
+                }
+            }
+
             boolean close = false;
             if (request.isEmpty()) {
-                response = "Please type something.\r\n";
+                response = "Please type something." + endl;
             } else if ("bye".equals(request.toLowerCase())) {
-                response = "Have a good day!\r\n";
+                response = "Have a good day!" + endl;
                 close = true;
             } else {
-                response = "Did you say '" + request + "'?\r\n";
+                response = "Did you say '" + request + "'?" + endl;
             }
+
+            response += consoleQuery;
 
             // We do not need to write a ChannelBuffer here.
             // We know the encoder inserted at TelnetPipelineFactory will do the conversion.

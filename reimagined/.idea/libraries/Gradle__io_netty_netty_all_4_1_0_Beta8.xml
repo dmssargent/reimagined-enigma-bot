@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="Gradle: io.netty:netty-all:4.1.0.Beta8">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.netty/netty-all/4.1.0.Beta8/539590efa48b7b700797be712275b7185f52b44a/netty-all-4.1.0.Beta8.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.netty/netty-all/4.1.0.Beta8/ec4ea787e16476d01d43619629450de06fbd0323/netty-all-4.1.0.Beta8-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
