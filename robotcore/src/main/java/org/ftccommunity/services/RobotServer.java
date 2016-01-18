@@ -8,7 +8,7 @@ import com.google.protobuf.nano.MessageNano;
 import org.ftccommunity.annonations.Inject;
 import org.ftccommunity.annonations.Named;
 import org.ftccommunity.annonations.RobotService;
-import org.ftccommunity.messages.Robocol;
+import org.ftccommunity.messages.nano.Robocol;
 import org.ftccommunity.messaging.MessageFactory;
 import org.ftccommunity.messaging.decoders.RobocolDecoder;
 import org.ftccommunity.messaging.encoders.RobocolEncoder;
@@ -160,10 +160,17 @@ public class RobotServer extends AbstractExecutionThreadService {
         }
 
         @Override
+        public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
+            cause.printStackTrace();
+            ctx.close();
+        }
+
+        @Override
         public void channelRead0(ChannelHandlerContext ctx, Robocol.RobotMessage msg) throws Exception {
             try {
                 if (msg.hasPing()) {
                     Robocol.Heartbeat heartbeat = msg.getPing();
+                    assert heartbeat != null;
                     long delay = System.nanoTime() - heartbeat.timeSent;
                 } else if (msg.hasGamepad()) {
                     bus.post(msg.getGamepad());
@@ -178,12 +185,6 @@ public class RobotServer extends AbstractExecutionThreadService {
                 }
             } catch (NullPointerException ignored) {
             }
-        }
-
-        @Override
-        public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
-            cause.printStackTrace();
-            ctx.close();
         }
     }
 }

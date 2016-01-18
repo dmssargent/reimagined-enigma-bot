@@ -16,11 +16,11 @@
 
 package org.ftccommunity;
 
-import android.support.annotation.NonNull;
-import android.util.Log;
-
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+
+import android.support.annotation.NonNull;
+import android.util.Log;
 
 import org.ftccommunity.annonations.Component;
 import org.ftccommunity.annonations.Inject;

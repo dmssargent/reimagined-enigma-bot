@@ -1,18 +1,5 @@
 package org.ftccommunity.reimagined;
 
-import com.google.protobuf.Message;
-import io.netty.bootstrap.Bootstrap;
-import io.netty.channel.*;
-import io.netty.channel.nio.NioEventLoopGroup;
-import io.netty.channel.socket.SocketChannel;
-import io.netty.channel.socket.nio.NioSocketChannel;
-import io.netty.handler.codec.DelimiterBasedFrameDecoder;
-import io.netty.handler.codec.Delimiters;
-import io.netty.handler.codec.base64.Base64Decoder;
-import io.netty.handler.codec.base64.Base64Encoder;
-import io.netty.handler.ssl.SslContext;
-import io.netty.handler.ssl.SslContextBuilder;
-import io.netty.handler.ssl.util.InsecureTrustManagerFactory;
 import org.ftccommunity.messages.Robocol;
 import org.ftccommunity.reimagined.messaging.MessageFactory;
 import org.ftccommunity.reimagined.messaging.decoders.RobocolDecoder;
@@ -21,6 +8,11 @@ import org.ftccommunity.reimagined.messaging.encoders.RobocolEncoder;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.Scanner;
+
+import io.netty.bootstrap.Bootstrap;
+import io.netty.channel.nio.NioEventLoopGroup;
+import io.netty.channel.socket.SocketChannel;
+import io.netty.channel.socket.nio.NioSocketChannel;
 
 /**
  * Simplistic telnet client.
@@ -46,7 +38,7 @@ public final class RobotClient {
             // Read commands from the stdin.
             ChannelFuture lastWriteFuture = null;
             BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
-            for (;;) {
+            for (; ; ) {
                 String line = in.readLine();
                 if (line == null) {
                     continue;

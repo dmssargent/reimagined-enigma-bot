@@ -15,17 +15,17 @@
   -->
 
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    tools:context="org.ftccommunity.enigmabot.LaunchActivity">
+      xmlns:app="http://schemas.android.com/apk/res-auto"
+      xmlns:tools="http://schemas.android.com/tools"
+      tools:context="org.ftccommunity.enigmabot.LaunchActivity">
     <item
-        android:id="@+id/action_view_logs"
-        android:orderInCategory="50"
-        android:title="View Logs"
-        app:showAsAction="never" />
+            android:id="@+id/action_view_logs"
+            android:orderInCategory="50"
+            android:title="View Logs"
+            app:showAsAction="never"/>
     <item
-        android:id="@+id/action_settings"
-        android:orderInCategory="100"
-        android:title="@string/action_settings"
-        app:showAsAction="never" />
+            android:id="@+id/action_settings"
+            android:orderInCategory="100"
+            android:title="@string/action_settings"
+            app:showAsAction="never"/>
 </menu>

@@ -16,12 +16,12 @@
 
 package org.ftccommunity.services;
 
+import com.google.common.util.concurrent.AbstractExecutionThreadService;
+
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Context;
-
-import com.google.common.util.concurrent.AbstractExecutionThreadService;
 
 import org.ftccommunity.annonations.Inject;
 import org.ftccommunity.annonations.Named;
@@ -66,6 +66,7 @@ public class DevConsole extends AbstractExecutionThreadService {
     private Thread mainThread;
     private Context context;
 
+    @SuppressWarnings("FieldCanBeLocal")
     @Inject
     @Named("DeviceName")
     private String wifiDeviceName = "";
@@ -97,9 +98,8 @@ public class DevConsole extends AbstractExecutionThreadService {
     }
 
     /**
-     * Run the service. This method is invoked on the execution thread.
-     * Implementations must respond to stop requests. You could poll for lifecycle
-     * changes in a work loop:
+     * Run the service. This method is invoked on the execution thread. Implementations must respond
+     * to stop requests. You could poll for lifecycle changes in a work loop:
      * <pre>
      *   public void run() {
      *     while ({@link #isRunning()}) {
@@ -107,8 +107,8 @@ public class DevConsole extends AbstractExecutionThreadService {
      *     }
      *   }
      * </pre>
-     * ...or you could respond to stop requests by implementing {@link
-     * #triggerShutdown()}, which should cause {@link #run()} to return.
+     * ...or you could respond to stop requests by implementing {@link #triggerShutdown()}, which
+     * should cause {@link #run()} to return.
      */
     @Override
     protected void run() throws Exception {
@@ -168,7 +168,6 @@ public class DevConsole extends AbstractExecutionThreadService {
         }
     }
 
-
     /**
      * Handles a server-side channel.
      */
@@ -199,6 +198,17 @@ public class DevConsole extends AbstractExecutionThreadService {
             ctx.write("Please enter the code shown on the screen: ");
             verified = false;
             ctx.flush();
+        }
+
+        @Override
+        public void channelReadComplete(ChannelHandlerContext ctx) {
+            ctx.flush();
+        }
+
+        @Override
+        public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
+            cause.printStackTrace();
+            ctx.close();
         }
 
         @Override
@@ -245,17 +255,6 @@ public class DevConsole extends AbstractExecutionThreadService {
             if (close) {
                 future.addListener(ChannelFutureListener.CLOSE);
             }
-        }
-
-        @Override
-        public void channelReadComplete(ChannelHandlerContext ctx) {
-            ctx.flush();
-        }
-
-        @Override
-        public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
-            cause.printStackTrace();
-            ctx.close();
         }
     }
 }

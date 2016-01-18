@@ -19,7 +19,6 @@ package org.ftccommunity.opmodes;
 import org.ftccommunity.annonations.Component;
 import org.ftccommunity.opmodes.dagger.OpModeBuilder;
 
-
 @Component(modules = OpModeBuilder.class)
 public interface AbstractOpMode {
     void init();

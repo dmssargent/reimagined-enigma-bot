@@ -1,6 +1,5 @@
 package org.ftccommunity.reimagined.messaging;
 
-
 import com.google.protobuf.Message;
 
 /**
@@ -10,7 +9,9 @@ public class MessageFactory {
 
     public interface RobocolMessage<T extends Message> {
         T getMessage();
+
         byte[] getSerialization();
+
         int size();
     }
 }

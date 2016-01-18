@@ -8,9 +8,6 @@ import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.MessageToMessageDecoder;
 
-import io.netty.handler.codec.string.StringDecoder;
-import org.ftccommunity.messages.*;
-
 /**
  * Created by David on 12/21/2015.
  */

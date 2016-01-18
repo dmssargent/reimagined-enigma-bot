@@ -25,16 +25,20 @@ message Gamepad {
 	bool b = 5;
 	bool x = 6;
 	bool y = 7;
-	bool leftTrigger = 8;
-	bool rightTigger = 9;
+	double leftTrigger = 8;
+	double rightTrigger = 9;
+	bool leftBumper = 10;
+	bool rightBumper = 11;
+
 	
 	uint64 timestamp = 16;
 	bool guide = 17;
 	bool back = 18;
+	bool start = 19;
 
     message Joystick {
-        double left = 1;
-        double right = 2;
+        double x = 1;
+        double y = 2;
         bool press = 3;
     }
 	

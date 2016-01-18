@@ -1,5 +1,10 @@
 package org.ftccommunity.enigmabot;
 
+import com.google.common.io.CharStreams;
+import com.google.common.util.concurrent.ListenableFuture;
+import com.google.common.util.concurrent.ListeningExecutorService;
+import com.google.common.util.concurrent.MoreExecutors;
+
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -17,11 +22,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
-
-import com.google.common.io.CharStreams;
-import com.google.common.util.concurrent.ListenableFuture;
-import com.google.common.util.concurrent.ListeningExecutorService;
-import com.google.common.util.concurrent.MoreExecutors;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -154,7 +154,7 @@ public class ViewLogsActivity extends AppCompatActivity {
             }
         } else if (id == R.id.action_save_log) {
             File file = new File(Environment.getExternalStorageDirectory() + "/enigma-bot/logs");
-            if (file.mkdirs() || file.isDirectory()) {
+            if (file.isDirectory() || file.mkdirs()) {
             }
             String filename = file.toString() + "/" + System.currentTimeMillis() + ".log";
             try {

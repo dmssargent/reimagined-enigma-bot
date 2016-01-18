@@ -1,10 +1,10 @@
 package org.ftccommunity.messaging.decoders;
 
-import android.util.Log;
-
 import com.google.protobuf.nano.InvalidProtocolBufferNanoException;
 
-import org.ftccommunity.messages.Robocol;
+import android.util.Log;
+
+import org.ftccommunity.messages.nano.Robocol;
 
 import java.util.List;
 

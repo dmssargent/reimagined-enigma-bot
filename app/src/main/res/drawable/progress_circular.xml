@@ -14,22 +14,22 @@
   ~ limitations under the License.
   -->
 <rotate xmlns:android="http://schemas.android.com/apk/res/android"
-    android:fromDegrees="90"
-    android:pivotX="50%"
-    android:pivotY="50%"
-    android:toDegrees="360">
+        android:fromDegrees="90"
+        android:pivotX="50%"
+        android:pivotY="50%"
+        android:toDegrees="360">
 
     <shape
-        android:innerRadiusRatio="6"
-        android:shape="ring"
-        android:thicknessRatio="7.0">
+            android:innerRadiusRatio="6"
+            android:shape="ring"
+            android:thicknessRatio="7.0">
         <gradient
-            android:angle="0"
-            android:centerColor="#007DD6"
-            android:endColor="#007DD6"
-            android:startColor="#007DD6"
-            android:type="sweep"
-            android:useLevel="false" />
+                android:angle="0"
+                android:centerColor="#007DD6"
+                android:endColor="#007DD6"
+                android:startColor="#007DD6"
+                android:type="sweep"
+                android:useLevel="false"/>
     </shape>
 
 </rotate>

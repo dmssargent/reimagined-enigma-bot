@@ -1,0 +1,54 @@
+group 'org.ftccommunity.reimagined-engima-bot'
+version '0.1.0'
+
+buildscript {
+    repositories {
+        mavenCentral()
+        maven {
+            url 'https://oss.sonatype.org/content/repositories/snapshots/'
+        }
+    }
+
+    dependencies {
+        classpath 'com.google.protobuf:protobuf-gradle-plugin:0.7.1'
+    }
+}
+
+apply plugin: 'idea'
+apply plugin: 'java'
+apply plugin: 'com.google.protobuf'
+
+sourceCompatibility = 1.8
+
+repositories {
+    jcenter()
+    mavenCentral()
+}
+
+sourceSets {
+    main {
+        proto {
+            srcDir '../robotcore/src/main/proto'
+        }
+
+        java {
+            srcDir 'src/main/java'
+        }
+    }
+}
+
+protobuf {
+    // Configure the protoc executable
+    protoc {
+        // Download from repositories
+        artifact = 'com.google.protobuf:protoc:3.0.0-beta-1'
+    }
+
+    generatedFilesBaseDir = "$projectDir/src"
+}
+
+dependencies {
+    testCompile group: 'junit', name: 'junit', version: '4.11'
+    compile 'com.google.protobuf:protobuf-java:3.0.0-beta-1'
+    compile 'io.netty:netty-all:4.1.0.Beta8'
+}

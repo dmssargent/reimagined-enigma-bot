@@ -46,17 +46,46 @@ public class Dimmer implements Runnable, View.OnTouchListener {
 
         // Setup
         executingThread = new Thread(this);
-        ;
         executingThread.start();
         executingThread.setName("Dimmer");
         window.getDecorView().setOnTouchListener(this);
         window.getDecorView().setKeepScreenOn(true);
     }
 
+    public void sleepDimmer(long delay) {
+        sleepUntil = delay;
+        synchronized (window) {
+            WindowManager.LayoutParams layoutParams = window.getAttributes();
+            layoutParams.screenBrightness = restoreBrightness;
+            window.setAttributes(layoutParams);
+        }
+    }
     /**
-     * Starts executing the active part of the class' code. This method is
-     * called when a thread is started that has been created with a class which
-     * implements {@code Runnable}.
+     * Called when a touch event is dispatched to a view. This allows listeners to get a chance to
+     * respond before the target view.
+     *
+     * @param v     The view the touch event has been dispatched to.
+     * @param event The MotionEvent object containing full information about the event.
+     * @return True if the listener has consumed the event, false otherwise.
+     */
+    @Override
+    public boolean onTouch(final View v, MotionEvent event) {
+        Log.d(TAG, "Touch Caught, sleeping dimmer");
+        sleepDimmer(10000);
+
+        v.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                v.setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
+            }
+        }, 500);
+
+        return false;
+    }
+
+    /**
+     * Starts executing the active part of the class' code. This method is called when a thread is
+     * started that has been created with a class which implements {@code Runnable}.
      */
     @Override
     public void run() {
@@ -115,36 +144,7 @@ public class Dimmer implements Runnable, View.OnTouchListener {
         Log.e(TAG, "Exiting Dimmer Thread");
     }
 
-    public void sleepDimmer(long delay) {
-        sleepUntil = delay;
-        synchronized (window) {
-            WindowManager.LayoutParams layoutParams = window.getAttributes();
-            layoutParams.screenBrightness = restoreBrightness;
-            window.setAttributes(layoutParams);
-        }
-    }
 
-    /**
-     * Called when a touch event is dispatched to a view. This allows listeners to
-     * get a chance to respond before the target view.
-     *
-     * @param v     The view the touch event has been dispatched to.
-     * @param event The MotionEvent object containing full information about
-     *              the event.
-     * @return True if the listener has consumed the event, false otherwise.
-     */
-    @Override
-    public boolean onTouch(final View v, MotionEvent event) {
-        Log.d(TAG, "Touch Caught, sleeping dimmer");
-        sleepDimmer(10000);
 
-        v.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                v.setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
-            }
-        }, 500);
 
-        return false;
-    }
 }

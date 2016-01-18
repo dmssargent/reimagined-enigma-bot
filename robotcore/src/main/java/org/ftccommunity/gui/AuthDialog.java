@@ -30,7 +30,6 @@ import org.ftccommunity.robotcore.R;
 import java.security.SecureRandom;
 import java.util.regex.Pattern;
 
-
 public class AuthDialog extends DialogFragment {
     private String passcode;
     private TextView passcodeView;

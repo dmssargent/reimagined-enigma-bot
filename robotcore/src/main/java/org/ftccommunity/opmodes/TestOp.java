@@ -16,7 +16,6 @@
 
 package org.ftccommunity.opmodes;
 
-
 import org.ftccommunity.annonations.Inject;
 import org.ftccommunity.annonations.Named;
 import org.ftccommunity.opmodes.dagger.Gamepad;

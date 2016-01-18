@@ -15,111 +15,111 @@
   -->
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/parentPanel"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="org.ftccommunity.enigmabot.LaunchActivity"
-    tools:showIn="@layout/activity_launch">
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:id="@+id/parentPanel"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingLeft="@dimen/activity_horizontal_margin"
+                android:paddingRight="@dimen/activity_horizontal_margin"
+                app:layout_behavior="@string/appbar_scrolling_view_behavior"
+                tools:context="org.ftccommunity.enigmabot.LaunchActivity"
+                tools:showIn="@layout/activity_launch">
 
     <TextView
-        android:id="@+id/ipAddress"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:text="@string/ipAddressLabel"
-        android:textStyle="bold" />
+            android:id="@+id/ipAddress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:text="@string/ipAddressLabel"
+            android:textStyle="bold"/>
 
     <TextView
-        android:id="@+id/IpAddressValue"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_toEndOf="@id/ipAddress"
-        android:text="@string/pending" />
+            android:id="@+id/IpAddressValue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@id/ipAddress"
+            android:text="@string/pending"/>
 
     <LinearLayout
-        android:id="@+id/gamePad1Container"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/IpAddressValue">
-
-        <TextView
+            android:id="@+id/gamePad1Container"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingEnd="8dp"
-            android:paddingStart="0dp"
-            android:text="Gamepad 1:"
-            android:textStyle="bold" />
+            android:layout_below="@id/IpAddressValue">
 
         <TextView
-            android:id="@+id/gamepad1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Not Ready" />
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingEnd="8dp"
+                android:paddingStart="0dp"
+                android:text="Gamepad 1:"
+                android:textStyle="bold"/>
+
+        <TextView
+                android:id="@+id/gamepad1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Not Ready"/>
     </LinearLayout>
 
     <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/gamePad1Container">
-
-        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingEnd="8dp"
-            android:paddingStart="0dp"
-            android:text="Gamepad 2:"
-            android:textStyle="bold" />
+            android:layout_below="@id/gamePad1Container">
 
         <TextView
-            android:id="@+id/gamePad2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Not Ready" />
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingEnd="8dp"
+                android:paddingStart="0dp"
+                android:text="Gamepad 2:"
+                android:textStyle="bold"/>
+
+        <TextView
+                android:id="@+id/gamePad2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Not Ready"/>
     </LinearLayout>
 
 
     <RelativeLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true">
-
-        <TextView
-            android:id="@+id/status"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="init"
-            android:textAlignment="center"
-            android:textAllCaps="true"
-            android:textSize="72sp"
-            android:textStyle="bold" />
-
-        <TextView
-            android:id="@+id/status_desc"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/status"
-            android:layout_centerHorizontal="true"
-            android:paddingBottom="8dp"
-            android:text="Loading..."
-            android:textAlignment="center"
-            android:textSize="18sp" />
+            android:layout_centerInParent="true">
+
+        <TextView
+                android:id="@+id/status"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="init"
+                android:textAlignment="center"
+                android:textAllCaps="true"
+                android:textSize="72sp"
+                android:textStyle="bold"/>
+
+        <TextView
+                android:id="@+id/status_desc"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/status"
+                android:layout_centerHorizontal="true"
+                android:paddingBottom="8dp"
+                android:text="Loading..."
+                android:textAlignment="center"
+                android:textSize="18sp"/>
 
         <RelativeLayout
-            android:id="@+id/robot_container"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/status_desc">
-        <ProgressBar
-            android:id="@+id/progressBar"
-            style="?android:attr/progressBarStyleLargeInverse"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true" />
+                android:id="@+id/robot_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/status_desc">
+            <ProgressBar
+                    android:id="@+id/progressBar"
+                    style="?android:attr/progressBarStyleLargeInverse"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"/>
         </RelativeLayout>
     </RelativeLayout>
 </RelativeLayout>

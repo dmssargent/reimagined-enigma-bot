@@ -16,6 +16,12 @@
 
 package org.ftccommunity.robotcore;
 
+import com.google.common.base.Strings;
+import com.google.common.base.Throwables;
+import com.google.common.eventbus.EventBus;
+import com.google.common.eventbus.Subscribe;
+import com.google.common.util.concurrent.ServiceManager;
+
 import android.app.Activity;
 import android.app.Service;
 import android.content.Context;
@@ -28,12 +34,6 @@ import android.support.annotation.Nullable;
 import android.util.Log;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
-import com.google.common.base.Strings;
-import com.google.common.base.Throwables;
-import com.google.common.eventbus.EventBus;
-import com.google.common.eventbus.Subscribe;
-import com.google.common.util.concurrent.ServiceManager;
 
 import org.ftccommunity.SimpleDag;
 import org.ftccommunity.annonations.Named;
@@ -52,7 +52,6 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
 
-
 public class RobotService extends Service {
     public final static String ROBOT_GENERAL = "ROBOT_GENERAL";
     private static final String TAG = "ROBOT_SERVICE:";
@@ -64,33 +63,25 @@ public class RobotService extends Service {
     private HashMap<String, Object> objectMap;
     private EventBus bus;
 
-
     public RobotService() {
         robotDisplay = new RobotDisplay();
         objectMap = new HashMap<>();
         bus = new EventBus(ROBOT_GENERAL);
     }
 
-
     /**
-     * Return the communication channel to the service.  May return null if
-     * clients can not bind to the service.  The returned
-     * {@link IBinder} is usually for a complex interface
-     * that has been <a href="{@docRoot}guide/components/aidl.html">described using
-     * aidl</a>.
-     * <p/>
-     * <p><em>Note that unlike other application components, calls on to the
-     * IBinder interface returned here may not happen on the main thread
-     * of the process</em>.  More information about the main thread can be found in
-     * <a href="{@docRoot}guide/topics/fundamentals/processes-and-threads.html">Processes and
-     * Threads</a>.</p>
+     * Return the communication channel to the service.  May return null if clients can not bind to
+     * the service.  The returned {@link IBinder} is usually for a complex interface that has been
+     * <a href="{@docRoot}guide/components/aidl.html">described using aidl</a>. <p/> <p><em>Note
+     * that unlike other application components, calls on to the IBinder interface returned here may
+     * not happen on the main thread of the process</em>.  More information about the main thread
+     * can be found in <a href="{@docRoot}guide/topics/fundamentals/processes-and-threads.html">Processes
+     * and Threads</a>.</p>
      *
-     * @param intent The Intent that was used to bind to this service,
-     *               as given to {@link Context#bindService
-     *               Context.bindService}.  Note that any extras that were included with
-     *               the Intent at that point will <em>not</em> be seen here.
-     * @return Return an IBinder through which clients can call on to the
-     * service.
+     * @param intent The Intent that was used to bind to this service, as given to {@link
+     *               Context#bindService Context.bindService}.  Note that any extras that were
+     *               included with the Intent at that point will <em>not</em> be seen here.
+     * @return Return an IBinder through which clients can call on to the service.
      */
     @Nullable
     @Override

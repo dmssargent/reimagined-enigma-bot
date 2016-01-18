@@ -16,6 +16,8 @@
 
 package org.ftccommunity.enigmabot;
 
+import com.google.common.net.InetAddresses;
+
 import android.content.ComponentName;
 import android.content.Intent;
 import android.content.ServiceConnection;
@@ -30,11 +32,11 @@ import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.google.common.net.InetAddresses;
-
 import org.ftccommunity.enigmabot.util.Dimmer;
 import org.ftccommunity.robotcore.RobotService;
+import org.ftccommunity.robotcore.handler.RobotUncaughtExceptionHandler;
 
+import java.io.Serializable;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
@@ -60,6 +62,12 @@ public class LaunchActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_launch);
+
+        Thread.currentThread().setUncaughtExceptionHandler(new RobotUncaughtExceptionHandler(this, 10));
+        final Serializable serializableExtra = getIntent().getSerializableExtra(RobotUncaughtExceptionHandler.EXTRA_EMEG_DUMP);
+        if (serializableExtra != null) {
+            startActivity(new Intent(this, CrashActivity.class).putExtra(RobotUncaughtExceptionHandler.EXTRA_EMEG_DUMP, serializableExtra));
+        }
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -90,6 +98,12 @@ public class LaunchActivity extends AppCompatActivity {
     }
 
     @Override
+    public void onStop() {
+        super.onStop();
+        unbindService(connection);
+    }
+
+    @Override
     public void onStart() {
         super.onStart();
         final TextView ipAddressLabel = (TextView) findViewById(R.id.IpAddressValue);
@@ -115,13 +129,6 @@ public class LaunchActivity extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.menu_launch, menu);
         return true;
     }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        unbindService(connection);
-    }
-
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

@@ -23,7 +23,6 @@ import org.ftccommunity.annonations.Module;
 import org.ftccommunity.annonations.Named;
 import org.ftccommunity.annonations.Provides;
 
-
 /**
  * Created by David on 12/18/2015.
  */

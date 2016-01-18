@@ -16,19 +16,18 @@
 
 package org.ftccommunity.enigmabot.util;
 
+import com.google.common.collect.ImmutableList;
+
 import android.content.Context;
 import android.util.Log;
 
-import com.google.common.collect.HashMultimap;
-import com.google.common.collect.ImmutableList;
+import dalvik.system.DexFile;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
-
-import dalvik.system.DexFile;
 
 /**
  * Created by David on 12/14/2015.
@@ -38,13 +37,9 @@ public class ClassManager {
             Collections.synchronizedList(new ArrayList<Class<?>>());
     private transient static ClassManager instance;
     private final String TAG = "CLASSMGR:";
-    private final List<Callback> callbacks;
-    private final HashMultimap<Callback, Class<?>> callbackMap;
     private final Context context;
 
     private ClassManager(final Context context) {
-        callbacks = Collections.synchronizedList(new LinkedList<Callback>());
-        callbackMap = HashMultimap.create();
         this.context = context;
     }
 
@@ -77,7 +72,6 @@ public class ClassManager {
             Log.wtf(TAG, e);
             throw new NullPointerException();
         }
-
 
         // Migrate the enum to OpMode LinkedList
         LinkedList<String> classes = new LinkedList<>(Collections.list(df.entries()));

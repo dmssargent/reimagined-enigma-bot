@@ -1,12 +1,12 @@
 package org.ftccommunity.reimagined.messaging.encoders;
 
+import org.ftccommunity.reimagined.messaging.MessageFactory;
+
 import java.util.List;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
-import io.netty.handler.codec.MessageToMessageDecoder;
 import io.netty.handler.codec.MessageToMessageEncoder;
-import org.ftccommunity.reimagined.messaging.MessageFactory;
 
 /**
  * Created by David on 12/21/2015.

@@ -14,4 +14,4 @@
  * limitations under the License.
  */
 
-include ':app', ':robotcore', ':simpledagger2'
+include ':app', ':robotcore', ':simpledagger2', ':hardware'

@@ -57,9 +57,8 @@ public class OpModeManager extends AbstractExecutionThreadService {
     }
 
     /**
-     * Run the service. This method is invoked on the execution thread.
-     * Implementations must respond to stop requests. You could poll for lifecycle
-     * changes in a work loop:
+     * Run the service. This method is invoked on the execution thread. Implementations must respond
+     * to stop requests. You could poll for lifecycle changes in a work loop:
      * <pre>
      *   public void run() {
      *     while ({@link #isRunning()}) {
@@ -67,8 +66,8 @@ public class OpModeManager extends AbstractExecutionThreadService {
      *     }
      *   }
      * </pre>
-     * ...or you could respond to stop requests by implementing {@link
-     * #triggerShutdown()}, which should cause {@link #run()} to return.
+     * ...or you could respond to stop requests by implementing {@link #triggerShutdown()}, which
+     * should cause {@link #run()} to return.
      */
     @Override
     protected void run() throws Exception {
@@ -76,7 +75,6 @@ public class OpModeManager extends AbstractExecutionThreadService {
             while (messageQueue.size() > 0) {
                 messageQueue.poll();
             }
-
 
 //            if (callables == null) {
 //                switch (currentRobotState) {
@@ -141,7 +139,6 @@ public class OpModeManager extends AbstractExecutionThreadService {
 //        currentRunningOpMode = opModeClass.getSimpleName();
 //        running = SimpleDag.create(opModeClass, this);
     }
-
 
     private static class StopRobot implements AbstractOpMode {
         private HardwareMap hardwareMap;

@@ -16,8 +16,5 @@
 
 package org.ftccommunity.opmodes.dagger;
 
-/**
- * Created by David on 12/18/2015.
- */
 public interface HardwareMap {
 }
